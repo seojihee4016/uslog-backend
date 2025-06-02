@@ -6,10 +6,15 @@ require("dotenv").config(); // .env 환경변수 불러오기
 const User = require("./models/User"); // 사용자 스키마 불러오기
 
 const app = express();
-const PORT = 4000;
+// Railway를 위한 포트 번호 설정
+const PORT = process.env.PORT || 4000;
 
 // 미들웨어 설정
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+    origin: ["https://uslog-home.netlify.app"], // 프론트 주소
+    methods: ["POST", "OPTIONS"], 
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -44,7 +49,9 @@ app.post("/test", async (req, res) => {
     }
 });
 
+const HOST = '0.0.0.0'; // Railway 외부 접근 허용
+
 // 서버 시작
-app.listen(PORT, () => {
-    console.log(`백엔드 서버 실행됨 > http://localhost:${PORT}`);
+app.listen(PORT, HOST, () => {
+    console.log(`✅ 백엔드 서버 실행됨 > http://${HOST}:${PORT}`);
 });
